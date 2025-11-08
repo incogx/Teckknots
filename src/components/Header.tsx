@@ -1,5 +1,14 @@
-import { BookOpen } from 'lucide-react';
-import type { AuthUser } from '../lib/supabase';
+import { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ChevronDown,
+  LogOut,
+  Settings,
+  User as UserIcon,
+  Sun,
+  Moon,
+} from "lucide-react";
+import type { AuthUser } from "../lib/supabase";
 
 interface HeaderProps {
   currentPage: string;
@@ -8,62 +17,207 @@ interface HeaderProps {
   onLogout: () => void;
 }
 
-export default function Header({ currentPage, onNavigate, user, onLogout }: HeaderProps) {
-  const isActive = (page: string) => currentPage === page ? 'text-[#004d26] font-semibold' : 'text-gray-700';
+export default function Header({
+  currentPage,
+  onNavigate,
+  user,
+  onLogout,
+}: HeaderProps) {
+  const [scrolled, setScrolled] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Detect scroll for header shadow
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Detect + persist theme
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const activeTheme = storedTheme || (prefersDark ? "dark" : "light");
+    setTheme(activeTheme);
+    document.documentElement.classList.toggle("dark", activeTheme === "dark");
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+  };
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const isActive = (page: string) =>
+    currentPage === page
+      ? "text-[#004d26] dark:text-[#00ff99] font-semibold"
+      : "text-gray-700 dark:text-gray-200";
+
+  const getDisplayName = () =>
+    user?.user_metadata?.full_name || user?.email || "User";
+
+  const getInitials = () => {
+    const name = user?.user_metadata?.full_name || user?.email || "";
+    return name.charAt(0).toUpperCase();
+  };
 
   return (
-    <header className="bg-white border-b border-gray-200">
+    <header
+      className={`bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 transition-all duration-300 ${
+        scrolled ? "shadow-md dark:shadow-lg" : ""
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
+          {/* LOGO */}
           <button
-            onClick={() => onNavigate('home')}
-            className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+            onClick={() => onNavigate("home")}
+            className="flex items-center space-x-3 hover:opacity-85 transition-all focus:outline-none focus:ring-2 focus:ring-[#004d26]/40 rounded-lg"
           >
-             <div className="w-12 h-13 bg-[#ffffff] rounded-lg flex items-center justify-center">
-              <img src="attachments/logo.png" alt="Logo" />
+            <div className="w-12 h-13 flex items-center justify-center">
+              <img src="attachments/logo.png" alt="Logo" className="h-10 w-auto" />
             </div>
-
             <div className="text-left">
-              <h1 className="text-lg font-bold text-[#004d26]">TechKnots</h1>
-              <p className="text-xs text-gray-500">Academy LLP</p>
+              <h1 className="text-lg font-bold text-[#004d26] dark:text-[#00ff99]">
+                TechKnots
+              </h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Academy LLP
+              </p>
             </div>
           </button>
 
+          {/* NAVIGATION */}
           <nav className="flex items-center space-x-8">
             <button
-              onClick={() => onNavigate('explore')}
-              className={`${isActive('explore')} hover:text-[#004d26] transition-colors font-medium`}
+              onClick={() => onNavigate("explore")}
+              className={`${isActive("explore")} hover:text-[#004d26] dark:hover:text-[#00ff99] transition-colors font-medium`}
             >
               Explore
             </button>
-            <a
-              href="mailto:contact@techknots.com"
-              className="text-gray-700 hover:text-[#004d26] transition-colors font-medium"
+            <button
+              onClick={() => onNavigate("contact")}
+              className={`${isActive("contact")} hover:text-[#004d26] dark:hover:text-[#00ff99] transition-colors font-medium`}
             >
               Contact
-            </a>
+            </button>
 
+            {/* AUTH */}
             {user ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600">{user.email}</span>
+              <div className="relative flex items-center" ref={dropdownRef}>
                 <button
-                  onClick={onLogout}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors font-medium"
+                  onClick={() => setIsDropdownOpen((p) => !p)}
+                  className="flex items-center space-x-3 group focus:outline-none"
                 >
-                  Logout
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="w-9 h-9 rounded-full bg-[#004d26] dark:bg-[#00ff99] text-white dark:text-gray-900 flex items-center justify-center font-semibold shadow-sm"
+                  >
+                    {getInitials()}
+                  </motion.div>
+                  <span className="text-sm text-gray-800 dark:text-gray-200 font-medium truncate max-w-[150px] group-hover:text-[#004d26] dark:group-hover:text-[#00ff99] transition-colors">
+                    {getDisplayName()}
+                  </span>
+                  <motion.div
+                    animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                  </motion.div>
                 </button>
+
+                {/* DROPDOWN */}
+                <AnimatePresence>
+                  {isDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 top-12 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 w-52 py-2 z-50"
+                    >
+                      <button
+                        onClick={() => {
+                          setIsDropdownOpen(false);
+                          onNavigate("profile");
+                        }}
+                        className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                      >
+                        <UserIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <span>Profile</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setIsDropdownOpen(false);
+                          onNavigate("settings");
+                        }}
+                        className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                      >
+                        <Settings className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <span>Settings</span>
+                      </button>
+
+                      {/* THEME TOGGLE */}
+                      <div className="border-t my-1 border-gray-200 dark:border-gray-700"></div>
+                      <button
+                        onClick={toggleTheme}
+                        className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2 transition-colors"
+                      >
+                        {theme === "light" ? (
+                          <>
+                            <Moon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                            <span>Dark Mode</span>
+                          </>
+                        ) : (
+                          <>
+                            <Sun className="w-4 h-4 text-yellow-500" />
+                            <span>Light Mode</span>
+                          </>
+                        )}
+                      </button>
+
+                      {/* LOGOUT */}
+                      <div className="border-t my-1 border-gray-200 dark:border-gray-700"></div>
+                      <button
+                        onClick={() => {
+                          setIsDropdownOpen(false);
+                          onLogout();
+                        }}
+                        className="w-full text-left px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 flex items-center space-x-2"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Logout</span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ) : (
               <div className="flex items-center space-x-3">
                 <button
-                  onClick={() => onNavigate('login')}
-                  className={`${isActive('login')} hover:text-[#004d26] transition-colors font-medium`}
+                  onClick={() => onNavigate("login")}
+                  className={`${isActive("login")} hover:text-[#004d26] dark:hover:text-[#00ff99] transition-colors font-medium`}
                 >
                   Login
                 </button>
                 <button
-                  onClick={() => onNavigate('signup')}
-                  className="px-4 py-2 bg-[#004d26] text-white rounded-lg hover:bg-[#003d1f] transition-colors font-medium shadow-sm hover:shadow-md"
+                  onClick={() => onNavigate("signup")}
+                  className="px-4 py-2 bg-[#004d26] dark:bg-[#00ff99] text-white dark:text-gray-900 rounded-lg hover:bg-[#003d1f] dark:hover:bg-[#00cc80] transition-all font-medium shadow-sm hover:shadow-md"
                 >
                   Signup
                 </button>
