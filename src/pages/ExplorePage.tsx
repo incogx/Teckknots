@@ -15,7 +15,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Learn the fundamentals of React and build dynamic UIs.",
       category: "Web Development",
       difficulty: "beginner",
-      image: "https://cdn.pixabay.com/photo/2017/01/10/23/01/code-1970468_1280.jpg",
+      image: "attachments/react.jpeg",
     },
     {
       id: 2,
@@ -23,7 +23,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Backend mastery with Node.js, Express, and APIs.",
       category: "Backend",
       difficulty: "intermediate",
-      image: "https://cdn.pixabay.com/photo/2016/12/19/10/16/code-1916206_1280.jpg",
+      image: "attachments/node.jpg",
     },
     {
       id: 3,
@@ -31,7 +31,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Build intelligent systems with Python and machine learning.",
       category: "AI / ML",
       difficulty: "advanced",
-      image: "https://cdn.pixabay.com/photo/2020/05/05/19/56/artificial-intelligence-5138195_1280.jpg",
+      image: "attachments/aipy.jpg",
     },
     {
       id: 4,
@@ -39,8 +39,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Learn HTML, CSS, and JavaScript from scratch.",
       category: "Frontend",
       difficulty: "beginner",
-      image:
-        "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image:"attachments/webdev.avif",
     },
     {
       id: 5,
@@ -48,26 +47,24 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Master React hooks, context, and state management.",
       category: "Frontend",
       difficulty: "advanced",
-      image:
-        "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image:"attachments/mern.avif"
     },
-    {
-      id: 6,
-      title: "Python for Data Science",
-      description: "Explore data analysis and visualization with Python.",
-      category: "Data Science",
-      difficulty: "intermediate",
-      image:
-        "https://images.pexels.com/photos/1374144/pexels-photo-1374144.jpeg?auto=compress&cs=tinysrgb&w=600",
-    },
-    {
+      {
+        id: 6,
+        title: "Python for Data Science",
+        description: "Explore data analysis and visualization with Python.",
+        category: "Data Science",
+        difficulty: "intermediate",
+        image:"attachments/ds.jpg",
+      },
+      {
       id: 7,
       title: "Full Stack Development",
       description: "Build complete web applications using modern tech stacks.",
       category: "Full Stack",
       difficulty: "intermediate",
       image:
-        "https://images.pexels.com/photos/1229861/pexels-photo-1229861.jpeg?auto=compress&cs=tinysrgb&w=600",
+       "attachments/mern.avif",
     },
     {
       id: 8,
@@ -76,7 +73,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       category: "DevOps",
       difficulty: "advanced",
       image:
-        "https://images.pexels.com/photos/3182819/pexels-photo-3182819.jpeg?auto=compress&cs=tinysrgb&w=600",
+       "attachments/devops.jpg",
     },
     {
       id: 9,

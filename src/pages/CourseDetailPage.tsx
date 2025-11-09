@@ -27,33 +27,33 @@ export default function CourseDetailPage({ onNavigate, course }: CourseDetailPag
     };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 flex flex-col items-center justify-start pt-20 pb-16 px-6 transition-colors">
-      {/* 🌿 Back Button */}
+    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 flex flex-col items-center justify-start pt-28 pb-16 px-6 transition-colors">
+      {/* 🌿 Glassy Back Button */}
       <motion.button
         onClick={() => onNavigate("explore")}
-        className="absolute top-6 left-6 bg-white dark:bg-gray-800 text-[#004d26] dark:text-[#00ff99] px-4 py-2 rounded-full shadow-lg flex items-center space-x-2 font-semibold hover:scale-105 hover:shadow-xl transition-all z-50"
-        whileHover={{ scale: 1.1 }}
+        className="fixed top-[90px] left-6 z-[900] bg-white/70 dark:bg-gray-800/60 backdrop-blur-md text-[#004d26] dark:text-[#00ff99] px-4 py-2 rounded-full shadow-lg flex items-center space-x-2 font-semibold hover:scale-105 hover:shadow-xl transition-all border border-gray-200 dark:border-gray-700"
+        whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
       >
         <ArrowLeft className="w-4 h-4" />
-        <span>Back to Explore</span>
+        <span>Back</span>
       </motion.button>
 
-      {/* Course Container */}
+      {/* 🧱 Course Container */}
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="w-full max-w-5xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
       >
-        {/* Course Banner */}
+        {/* 🎞️ Course Banner */}
         <div className="relative group">
           <img
             src={mockCourse.image}
             alt={mockCourse.title}
             className="w-full h-72 object-cover group-hover:brightness-90 transition-all duration-300"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
           <div className="absolute bottom-6 left-6">
             <motion.h1
@@ -67,7 +67,7 @@ export default function CourseDetailPage({ onNavigate, course }: CourseDetailPag
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.45 }}
               className="text-sm md:text-base text-gray-200 mt-2 font-medium"
             >
               {mockCourse.category} •{" "}
@@ -76,13 +76,13 @@ export default function CourseDetailPage({ onNavigate, course }: CourseDetailPag
           </div>
         </div>
 
-        {/* Course Content Section */}
-        <div className="p-8 md:p-10 space-y-8">
-          {/* About Section */}
+        {/* 📘 Course Content */}
+        <div className="p-8 md:p-10 space-y-10">
+          {/* 🧾 About Section */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.25 }}
           >
             <h2 className="text-2xl font-bold text-[#004d26] dark:text-[#00ff99] mb-3">
               About this Course
@@ -92,26 +92,32 @@ export default function CourseDetailPage({ onNavigate, course }: CourseDetailPag
             </p>
           </motion.div>
 
-          {/* Highlights Section */}
+          {/* 🧩 Highlights Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.35 }}
             className="grid sm:grid-cols-3 gap-6"
           >
             {[
               {
-                icon: <BookOpen className="w-8 h-8 text-[#004d26] dark:text-[#00ff99]" />,
+                icon: (
+                  <BookOpen className="w-8 h-8 text-[#004d26] dark:text-[#00ff99]" />
+                ),
                 title: "12 Lessons",
                 desc: "Interactive chapters covering React fundamentals.",
               },
               {
-                icon: <Trophy className="w-8 h-8 text-[#004d26] dark:text-[#00ff99]" />,
+                icon: (
+                  <Trophy className="w-8 h-8 text-[#004d26] dark:text-[#00ff99]" />
+                ),
                 title: "Certificate",
                 desc: "Earn a shareable completion certificate.",
               },
               {
-                icon: <BarChart3 className="w-8 h-8 text-[#004d26] dark:text-[#00ff99]" />,
+                icon: (
+                  <BarChart3 className="w-8 h-8 text-[#004d26] dark:text-[#00ff99]" />
+                ),
                 title: "Track Progress",
                 desc: "Monitor your learning progress and quiz results.",
               },
@@ -132,17 +138,17 @@ export default function CourseDetailPage({ onNavigate, course }: CourseDetailPag
             ))}
           </motion.div>
 
-          {/* Action Buttons */}
+          {/* 🚀 Action Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.45 }}
             className="mt-8 flex flex-wrap gap-4 justify-center"
           >
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => alert("Starting Lesson...")}
+              onClick={() => onNavigate("home")} // Replace with "start lesson" page later
               className="px-8 py-3 bg-[#004d26] dark:bg-[#00ff99] text-white dark:text-gray-900 font-semibold rounded-full hover:shadow-lg transition-all"
             >
               Start Lesson
@@ -151,7 +157,7 @@ export default function CourseDetailPage({ onNavigate, course }: CourseDetailPag
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => alert("Taking Quiz...")}
+              onClick={() => alert('Quiz feature coming soon!')}
               className="px-8 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
             >
               Take Quiz

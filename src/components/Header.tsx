@@ -28,18 +28,17 @@ export default function Header({
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Detect scroll for header shadow
+  // ✅ Add sticky top z-index to prevent overlap
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Detect + persist theme
+  // ✅ Load saved theme (default light)
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const activeTheme = storedTheme || (prefersDark ? "dark" : "light");
+    const activeTheme = storedTheme || "light";
     setTheme(activeTheme);
     document.documentElement.classList.toggle("dark", activeTheme === "dark");
   }, []);
@@ -51,7 +50,7 @@ export default function Header({
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
-  // Close dropdown on outside click
+  // ✅ Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -77,13 +76,13 @@ export default function Header({
 
   return (
     <header
-      className={`bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 transition-all duration-300 ${
+      className={`sticky top-0 z-[1000] bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 transition-all duration-300 ${
         scrolled ? "shadow-md dark:shadow-lg" : ""
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
-          {/* LOGO */}
+          {/* 🔹 LOGO */}
           <button
             onClick={() => onNavigate("home")}
             className="flex items-center space-x-3 hover:opacity-85 transition-all focus:outline-none focus:ring-2 focus:ring-[#004d26]/40 rounded-lg"
@@ -101,22 +100,26 @@ export default function Header({
             </div>
           </button>
 
-          {/* NAVIGATION */}
+          {/* 🔹 NAVIGATION */}
           <nav className="flex items-center space-x-8">
             <button
               onClick={() => onNavigate("explore")}
-              className={`${isActive("explore")} hover:text-[#004d26] dark:hover:text-[#00ff99] transition-colors font-medium`}
+              className={`${isActive(
+                "explore"
+              )} hover:text-[#004d26] dark:hover:text-[#00ff99] transition-colors font-medium`}
             >
               Explore
             </button>
             <button
               onClick={() => onNavigate("contact")}
-              className={`${isActive("contact")} hover:text-[#004d26] dark:hover:text-[#00ff99] transition-colors font-medium`}
+              className={`${isActive(
+                "contact"
+              )} hover:text-[#004d26] dark:hover:text-[#00ff99] transition-colors font-medium`}
             >
               Contact
             </button>
 
-            {/* AUTH */}
+            {/* 🔹 AUTH MENU */}
             {user ? (
               <div className="relative flex items-center" ref={dropdownRef}>
                 <button
@@ -140,7 +143,7 @@ export default function Header({
                   </motion.div>
                 </button>
 
-                {/* DROPDOWN */}
+                {/* Dropdown */}
                 <AnimatePresence>
                   {isDropdownOpen && (
                     <motion.div
@@ -148,7 +151,7 @@ export default function Header({
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.9, y: -10 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute right-0 top-12 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 w-52 py-2 z-50"
+                      className="absolute right-0 top-12 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 w-52 py-2 z-[999]"
                     >
                       <button
                         onClick={() => {
@@ -172,8 +175,9 @@ export default function Header({
                         <span>Settings</span>
                       </button>
 
-                      {/* THEME TOGGLE */}
                       <div className="border-t my-1 border-gray-200 dark:border-gray-700"></div>
+
+                      {/* Theme Toggle */}
                       <button
                         onClick={toggleTheme}
                         className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2 transition-colors"
@@ -191,8 +195,9 @@ export default function Header({
                         )}
                       </button>
 
-                      {/* LOGOUT */}
                       <div className="border-t my-1 border-gray-200 dark:border-gray-700"></div>
+
+                      {/* Logout */}
                       <button
                         onClick={() => {
                           setIsDropdownOpen(false);
@@ -211,7 +216,9 @@ export default function Header({
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => onNavigate("login")}
-                  className={`${isActive("login")} hover:text-[#004d26] dark:hover:text-[#00ff99] transition-colors font-medium`}
+                  className={`${isActive(
+                    "login"
+                  )} hover:text-[#004d26] dark:hover:text-[#00ff99] transition-colors font-medium`}
                 >
                   Login
                 </button>

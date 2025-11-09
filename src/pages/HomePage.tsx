@@ -3,9 +3,10 @@ import CourseCard from "../components/CourseCard";
 
 interface HomePageProps {
   onNavigate: (page: string, course?: any) => void;
+  user?: any; // ✅ now accepts user from App.tsx
 }
 
-export default function HomePage({ onNavigate }: HomePageProps) {
+export default function HomePage({ onNavigate, user }: HomePageProps) {
   const courses = [
     {
       id: "1",
@@ -84,19 +85,21 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                onClick={() => onNavigate("signup")}
+                onClick={() => onNavigate(user ? "explore" : "signup")}
                 className="px-8 py-3 bg-[#004d26] dark:bg-[#00ff99] text-white dark:text-gray-900 rounded-lg hover:bg-[#003d1f] dark:hover:bg-[#00cc80] font-semibold flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transition-all"
               >
-                <span>Get Started Free</span>
+                <span>{user ? "Explore Courses" : "Get Started Free"}</span>
                 <ArrowRight className="w-5 h-5 ml-1" />
               </button>
 
-              <button
-                onClick={() => onNavigate("explore")}
-                className="px-8 py-3 border-2 border-[#004d26] dark:border-[#00ff99] text-[#004d26] dark:text-[#00ff99] rounded-lg hover:bg-[#f0f9f7] dark:hover:bg-gray-800 transition-colors font-semibold"
-              >
-                Explore Courses
-              </button>
+              {!user && (
+                <button
+                  onClick={() => onNavigate("login")}
+                  className="px-8 py-3 border-2 border-[#004d26] dark:border-[#00ff99] text-[#004d26] dark:text-[#00ff99] rounded-lg hover:bg-[#f0f9f7] dark:hover:bg-gray-800 transition-colors font-semibold"
+                >
+                  Login
+                </button>
+              )}
             </div>
           </div>
 
@@ -121,17 +124,23 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: <Code className="w-7 h-7 text-[#004d26] dark:text-[#00ff99]" />,
+                icon: (
+                  <Code className="w-7 h-7 text-[#004d26] dark:text-[#00ff99]" />
+                ),
                 title: "Expert-Led Courses",
                 text: "Learn from industry professionals with real-world experience.",
               },
               {
-                icon: <Zap className="w-7 h-7 text-[#004d26] dark:text-[#00ff99]" />,
+                icon: (
+                  <Zap className="w-7 h-7 text-[#004d26] dark:text-[#00ff99]" />
+                ),
                 title: "Learn at Your Pace",
                 text: "Flexible schedule with lifetime access to materials.",
               },
               {
-                icon: <Users className="w-7 h-7 text-[#004d26] dark:text-[#00ff99]" />,
+                icon: (
+                  <Users className="w-7 h-7 text-[#004d26] dark:text-[#00ff99]" />
+                ),
                 title: "Community Support",
                 text: "Connect with learners and mentors in our active community.",
               },
@@ -183,10 +192,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             Join thousands of students already learning on TechKnots Academy.
           </p>
           <button
-            onClick={() => onNavigate("signup")}
+            onClick={() => onNavigate(user ? "explore" : "signup")}
             className="px-8 py-3 bg-white dark:bg-gray-900 text-[#004d26] dark:text-[#00ff99] rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all font-semibold shadow-lg hover:shadow-xl"
           >
-            Start Free Today
+            {user ? "Explore Courses" : "Start Free Today"}
           </button>
         </div>
       </section>
