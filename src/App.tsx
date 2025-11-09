@@ -13,7 +13,7 @@ import CourseDetailPage from "./pages/CourseDetailPage";
 import { Toaster, toast } from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 
-type Page =
+export type Page =
   | "home"
   | "login"
   | "signup"
@@ -31,7 +31,7 @@ function App() {
   const [pendingCourse, setPendingCourse] = useState<any | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  // ✅ Theme state (default light + persistent)
+  // ✅ Theme (default light)
   const [theme, setTheme] = useState<"light" | "dark">(
     () => (localStorage.getItem("theme") as "light" | "dark") || "light"
   );
@@ -43,14 +43,19 @@ function App() {
 
   const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
 
-  // ✅ Handle OAuth Redirect & Auth Session Sync
+  // ✅ Handle OAuth redirect (new Supabase v2 method)
   useEffect(() => {
     const handleOAuthRedirect = async () => {
       const hash = window.location.hash;
-      if (hash.includes("access_token")) {
-        const { data, error } = await supabase.auth.getSessionFromUrl({
-          storeSession: true,
-        });
+      if (hash.includes("access_token") || hash.includes("code")) {
+        const { data, error } = await supabase.auth.exchangeCodeForSession(
+          window.location.hash
+        );
+
+        if (error) {
+          console.error("OAuth redirect error:", error.message);
+          return;
+        }
 
         if (data?.session?.user) {
           const { user } = data.session;
@@ -67,7 +72,6 @@ function App() {
           toast.success(`Welcome, ${name}! 👋`);
 
           if (pendingCourse) {
-            // ✅ Go straight to course if user joined one before logging in
             setSelectedCourse(pendingCourse);
             setPendingCourse(null);
             setCurrentPage("course-detail");
@@ -76,7 +80,6 @@ function App() {
           }
         }
 
-        if (error) console.error("OAuth redirect error:", error);
         window.history.replaceState({}, document.title, window.location.pathname);
       }
     };
@@ -101,7 +104,7 @@ function App() {
     return () => subscription.unsubscribe();
   }, [pendingCourse]);
 
-  // ✅ Check Auth Session Persistence
+  // ✅ Persistent Session Check
   const checkAuthStatus = async () => {
     try {
       const { data } = await supabase.auth.getSession();
@@ -140,7 +143,7 @@ function App() {
     );
   }
 
-  // ✅ Page Animation Transition
+  // ✅ Page Animation
   const fadeTransition = {
     initial: { opacity: 0, y: 10 },
     animate: { opacity: 1, y: 0 },
@@ -148,7 +151,7 @@ function App() {
     transition: { duration: 0.25 },
   };
 
-  // ✅ macOS-style Login Modal
+  // ✅ Modal for login required
   const LoginRequiredModal = () => {
     if (typeof document === "undefined") return null;
     return createPortal(
@@ -216,7 +219,7 @@ function App() {
 
       <Header
         currentPage={currentPage}
-        onNavigate={setCurrentPage}
+        onNavigate={(page) => setCurrentPage(page as Page)}
         user={user}
         onLogout={handleLogout}
       />
@@ -237,7 +240,7 @@ function App() {
             <motion.div key="home" {...fadeTransition}>
               <HomePage
                 user={user}
-                onNavigate={(page: Page, course?: any) => {
+                onNavigate={(page, course) => {
                   if (page === "course-detail" && course) {
                     if (!user) {
                       setPendingCourse(course);
@@ -246,7 +249,7 @@ function App() {
                     }
                     setSelectedCourse(course);
                   }
-                  setCurrentPage(page);
+                  setCurrentPage(page as Page);
                 }}
               />
             </motion.div>
@@ -255,7 +258,7 @@ function App() {
           {currentPage === "login" && (
             <motion.div key="login" {...fadeTransition}>
               <LoginPage
-                onNavigate={setCurrentPage}
+                onNavigate={(page) => setCurrentPage(page as Page)}
                 onLoginSuccess={() => {
                   if (pendingCourse) {
                     setSelectedCourse(pendingCourse);
@@ -273,7 +276,7 @@ function App() {
           {currentPage === "signup" && (
             <motion.div key="signup" {...fadeTransition}>
               <SignupPage
-                onNavigate={setCurrentPage}
+                onNavigate={(page) => setCurrentPage(page as Page)}
                 onSignupSuccess={() => {
                   if (pendingCourse) {
                     setSelectedCourse(pendingCourse);
@@ -291,7 +294,7 @@ function App() {
           {currentPage === "explore" && (
             <motion.div key="explore" {...fadeTransition}>
               <ExplorePage
-                onNavigate={setCurrentPage}
+                onNavigate={(page) => setCurrentPage(page as Page)}
                 onSelectCourse={(course) => {
                   if (!user) {
                     setPendingCourse(course);
@@ -307,26 +310,44 @@ function App() {
 
           {currentPage === "contact" && (
             <motion.div key="contact" {...fadeTransition}>
-              <ContactPage user={user} onNavigate={setCurrentPage} />
+              <ContactPage
+                user={user}
+                onNavigate={(page) => setCurrentPage(page as Page)}
+              />
             </motion.div>
           )}
 
           {currentPage === "profile" && user && (
             <motion.div key="profile" {...fadeTransition}>
-              <ProfilePage user={user} onNavigate={setCurrentPage} />
+              <ProfilePage
+                user={user}
+                onNavigate={(page) => setCurrentPage(page as Page)}
+              />
             </motion.div>
           )}
 
           {currentPage === "settings" && user && (
             <motion.div key="settings" {...fadeTransition}>
-              <SettingsPage user={user} onNavigate={setCurrentPage} />
+              <SettingsPage
+                user={user}
+                onNavigate={(page) => setCurrentPage(page as Page)}
+              />
             </motion.div>
           )}
+          {currentPage === "quiz" && (
+            <motion.div key="quiz" {...fadeTransition}>
+              <QuizPage
+                onNavigate={setCurrentPage}
+                courseTitle={selectedCourse?.title}
+              />
+            </motion.div>
+)}
+
 
           {currentPage === "course-detail" && selectedCourse && (
             <motion.div key="course-detail" {...fadeTransition}>
               <CourseDetailPage
-                onNavigate={setCurrentPage}
+                onNavigate={(page) => setCurrentPage(page as Page)}
                 course={selectedCourse}
               />
             </motion.div>

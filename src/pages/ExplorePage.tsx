@@ -1,5 +1,8 @@
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
+import CategoryFilter from "../components/CategoryFilter";
+import LessonCard from "../components/LessonCard";
 
 interface ExplorePageProps {
   onNavigate: (page: string) => void;
@@ -7,7 +10,6 @@ interface ExplorePageProps {
 }
 
 export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageProps) {
-  // ✅ Combined Course List (Featured + Explore)
   const courses = [
     {
       id: 1,
@@ -39,7 +41,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Learn HTML, CSS, and JavaScript from scratch.",
       category: "Frontend",
       difficulty: "beginner",
-      image:"attachments/webdev.avif",
+      image: "attachments/webdev.avif",
     },
     {
       id: 5,
@@ -47,24 +49,23 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Master React hooks, context, and state management.",
       category: "Frontend",
       difficulty: "advanced",
-      image:"attachments/mern.avif"
+      image: "attachments/mern.avif",
     },
-      {
-        id: 6,
-        title: "Python for Data Science",
-        description: "Explore data analysis and visualization with Python.",
-        category: "Data Science",
-        difficulty: "intermediate",
-        image:"attachments/ds.jpg",
-      },
-      {
+    {
+      id: 6,
+      title: "Python for Data Science",
+      description: "Explore data analysis and visualization with Python.",
+      category: "Data Science",
+      difficulty: "intermediate",
+      image: "attachments/ds.jpg",
+    },
+    {
       id: 7,
       title: "Full Stack Development",
       description: "Build complete web applications using modern tech stacks.",
       category: "Full Stack",
       difficulty: "intermediate",
-      image:
-       "attachments/mern.avif",
+      image: "attachments/mern.avif",
     },
     {
       id: 8,
@@ -72,8 +73,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Deploy applications using AWS, Docker, and Kubernetes.",
       category: "DevOps",
       difficulty: "advanced",
-      image:
-       "attachments/devops.jpg",
+      image: "attachments/devops.jpg",
     },
     {
       id: 9,
@@ -86,92 +86,87 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
     },
   ];
 
-  // ✅ Difficulty color helper
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "beginner":
-        return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300";
-      case "intermediate":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300";
-      case "advanced":
-        return "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300";
-      default:
-        return "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300";
-    }
-  };
+  // 🧭 Category Filter
+  const allCategories = useMemo(() => {
+    const unique = Array.from(new Set(courses.map((c) => c.category)));
+    return ["All", ...unique];
+  }, [courses]);
+
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const filteredCourses = useMemo(() => {
+    if (selectedCategory === "All") return courses;
+    return courses.filter((c) => c.category === selectedCategory);
+  }, [selectedCategory]);
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 py-16 px-6 transition-colors">
-      {/* 🟢 Floating Back Button */}
-      <motion.button
-        onClick={() => onNavigate("home")}
-        className="fixed top-6 left-6 bg-white dark:bg-gray-800 text-[#004d26] dark:text-[#00ff99] px-4 py-2 rounded-full shadow-lg flex items-center space-x-2 font-semibold hover:scale-105 hover:shadow-xl transition-all z-50"
-        whileHover={{ scale: 1.1 }}
-      >
-        <ArrowLeft className="w-4 h-4" />
-        <span>Back to Home</span>
-      </motion.button>
-
+    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 to-white py-16 px-6 transition-colors">
       <div className="max-w-7xl mx-auto">
+        {/* 🔤 Header */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-extrabold text-[#004d26] dark:text-[#00ff99] text-center mb-12"
+          className="text-4xl font-extrabold text-[#004d26] text-center mb-8"
         >
           Explore All Courses
         </motion.h1>
 
-        {/* 🧩 Grid of Courses */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {courses.map((course, i) => (
-            <motion.div
-              key={course.id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ scale: 1.03 }}
-              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300"
-            >
-              <div className="relative">
-                <img
-                  src={course.image}
-                  alt={course.title}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="absolute top-4 left-4 px-3 py-1 text-xs font-semibold rounded-full bg-[#004d26] text-white dark:bg-[#00ff99] dark:text-gray-900 shadow-sm">
-                  {course.category}
-                </div>
-              </div>
-
-              <div className="p-6">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                  {course.title}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
-                  {course.description}
-                </p>
-
-                <div className="flex justify-between items-center mb-4">
-                  <span
-                    className={`text-xs font-semibold px-3 py-1 rounded-full ${getDifficultyColor(
-                      course.difficulty
-                    )}`}
-                  >
-                    {course.difficulty.charAt(0).toUpperCase() +
-                      course.difficulty.slice(1)}
-                  </span>
-                </div>
-
-                <button
-                  onClick={() => onSelectCourse(course)}
-                  className="w-full py-2.5 bg-[#004d26] dark:bg-[#00ff99] text-white dark:text-gray-900 font-semibold rounded-lg hover:scale-105 hover:shadow-lg transition-all"
-                >
-                  View Details
-                </button>
-              </div>
-            </motion.div>
-          ))}
+        {/* 🟢 Back Button (below header) */}
+        <div className="flex justify-center mb-10">
+          <motion.button
+            onClick={() => onNavigate("home")}
+            className="bg-white text-[#004d26] px-5 py-2 rounded-full shadow-lg flex items-center space-x-2 font-semibold hover:scale-105 hover:shadow-xl transition-all"
+            whileHover={{ scale: 1.05 }}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Home</span>
+          </motion.button>
         </div>
+
+        {/* 🧩 Category Filter */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <CategoryFilter
+            categories={allCategories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+          />
+        </motion.div>
+
+        {/* 🔍 Course Results Count */}
+        <div className="text-center text-gray-600 mb-6 text-sm font-medium">
+          {filteredCourses.length} {filteredCourses.length === 1 ? "course" : "courses"} found
+        </div>
+
+        {/* 📚 Courses Grid */}
+        {filteredCourses.length === 0 ? (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center text-gray-500 mt-10"
+          >
+            No courses found in this category.
+          </motion.p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredCourses.map((course, i) => (
+              <motion.div
+                key={course.id}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <LessonCard
+                  lesson={course}
+                  onStart={(selected) => onSelectCourse(selected)}
+                />
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
