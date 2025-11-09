@@ -17,9 +17,10 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
 
     
-    "predeploy": "npm run build && cp dist/index.html dist/404.html",
+    "predeploy": "npm run build && copy dist\\index.html dist\\404.html",
     "deploy": "gh-pages -d dist"
   },
+
 
   "dependencies": {
     "@supabase/supabase-js": "^2.80.0",

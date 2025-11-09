@@ -3,22 +3,22 @@ import react from '@vitejs/plugin-react'
 
 /**
  * ------------------------------------------------------------
- * 🚀 Vite Configuration — TechKnots Academy
+ * 🚀 Vite Configuration — TechKnots Academy (Vercel)
  * ------------------------------------------------------------
  * Framework: React + TypeScript + TailwindCSS + Supabase
- * Deployment: GitHub Pages (base path: /Teckknots/)
+ * Deployment: Vercel / Netlify (served from root, not subpath)
  *
  * Key Features:
- *  - Correct base path for GH Pages hosting
+ *  - Correct root base for modern hosting
  *  - SPA routing support for React Router
- *  - Optimized build with esbuild
- *  - Local dev on port 5173 (auto opens)
+ *  - Optimized production build with esbuild
+ *  - Local dev server on port 5173
  * ------------------------------------------------------------
  */
 
 export default defineConfig({
-  // ✅ MUST match your GitHub repository name exactly (case-sensitive)
-  base: '/Teckknots/',
+  // ✅ Serve from root (for Vercel, Netlify, Cloudflare Pages)
+  base: './',
 
   plugins: [react()],
 
@@ -29,13 +29,13 @@ export default defineConfig({
     strictPort: true,
   },
 
-  // ⚙️ Preview (for testing production build locally)
+  // ⚙️ Preview (for local production testing)
   preview: {
     port: 4173,
     open: true,
   },
 
-  // ⚙️ Build optimization
+  // ⚙️ Production build optimization
   build: {
     outDir: 'dist',
     sourcemap: false,
@@ -43,19 +43,19 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
   },
 
-  // 🚀 Dependency optimization (speeds up dev server)
+  // 🚀 Dependency optimization
   optimizeDeps: {
-    exclude: ['lucide-react'], // avoids hot-reload issues
+    exclude: ['lucide-react'], // prevents hot-reload lag
   },
 
-  // 🧱 Path aliases
+  // 🧱 Aliases
   resolve: {
     alias: {
       '@': '/src',
     },
   },
 
-  // 🌐 Inject React import automatically for JSX (optional quality-of-life)
+  // 🌐 Inject React automatically for JSX
   esbuild: {
     jsxInject: `import React from 'react'`,
   },
