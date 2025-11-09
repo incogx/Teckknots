@@ -16,7 +16,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
 
-    // 👇 ensures GitHub Pages routing works for React + Supabase redirects
+    
     "predeploy": "npm run build && cp dist/index.html dist/404.html",
     "deploy": "gh-pages -d dist"
   },
