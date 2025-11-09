@@ -2,15 +2,25 @@
   "name": "teckknots",
   "private": true,
   "version": "1.0.0",
+  "description": "🚀 TechKnots Academy — Modern LMS Platform built with React, TypeScript, TailwindCSS, Framer Motion, and Supabase.",
+  "author": "Abdul Kaif (@incogx)",
+  "license": "MIT",
   "type": "module",
+
+  "homepage": "https://incogx.github.io/Teckknots/",
+
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
+
+    // 👇 ensures GitHub Pages routing works for React + Supabase redirects
+    "predeploy": "npm run build && cp dist/index.html dist/404.html",
     "deploy": "gh-pages -d dist"
   },
+
   "dependencies": {
     "@supabase/supabase-js": "^2.80.0",
     "caniuse-lite": "^1.0.30001754",
@@ -22,6 +32,7 @@
     "react-hot-toast": "^2.6.0",
     "recharts": "^3.3.0"
   },
+
   "devDependencies": {
     "@eslint/js": "^9.9.1",
     "@types/react": "^18.3.5",
@@ -38,5 +49,18 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.3.0",
     "vite": "^5.4.2"
-  }
+  },
+
+  "keywords": [
+    "React",
+    "Vite",
+    "TypeScript",
+    "TailwindCSS",
+    "Supabase",
+    "Framer Motion",
+    "Learning Management System",
+    "TechKnots",
+    "LMS",
+    "Animated UI"
+  ]
 }
