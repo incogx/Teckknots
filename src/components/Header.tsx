@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import logo from "@/attachments/logo.png";
 import {
   ChevronDown,
   LogOut,
@@ -28,14 +29,14 @@ export default function Header({
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // ✅ Add sticky top z-index to prevent overlap
+  // 🔹 Handle scroll shadow
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ✅ Load saved theme (default light)
+  // 🔹 Load saved theme
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
     const activeTheme = storedTheme || "light";
@@ -50,7 +51,7 @@ export default function Header({
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
-  // ✅ Close dropdown when clicking outside
+  // 🔹 Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -82,13 +83,17 @@ export default function Header({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
-          {/* 🔹 LOGO */}
+          {/* 🔹 LOGO SECTION */}
           <button
             onClick={() => onNavigate("home")}
-            className="flex items-center space-x-3 hover:opacity-85 transition-all focus:outline-none focus:ring-2 focus:ring-[#004d26]/40 rounded-lg"
+            className="flex items-center space-x-3 hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-[#004d26]/40 rounded-lg"
           >
-            <div className="w-12 h-13 flex items-center justify-center">
-              <img src="attachments/logo.png" alt="Logo" className="h-10 w-auto" />
+            <div className="flex items-center justify-center w-12 h-12">
+              <img
+                src={logo}
+                alt="TechKnots Logo"
+                className="h-10 w-auto object-contain"
+              />
             </div>
             <div className="text-left">
               <h1 className="text-lg font-bold text-[#004d26] dark:text-[#00ff99]">
@@ -143,7 +148,7 @@ export default function Header({
                   </motion.div>
                 </button>
 
-                {/* Dropdown */}
+                {/* 🔽 DROPDOWN MENU */}
                 <AnimatePresence>
                   {isDropdownOpen && (
                     <motion.div
@@ -177,7 +182,7 @@ export default function Header({
 
                       <div className="border-t my-1 border-gray-200 dark:border-gray-700"></div>
 
-                      {/* Theme Toggle */}
+                      {/* 🌓 THEME TOGGLE */}
                       <button
                         onClick={toggleTheme}
                         className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2 transition-colors"
@@ -197,7 +202,7 @@ export default function Header({
 
                       <div className="border-t my-1 border-gray-200 dark:border-gray-700"></div>
 
-                      {/* Logout */}
+                      {/* 🚪 LOGOUT */}
                       <button
                         onClick={() => {
                           setIsDropdownOpen(false);
@@ -213,6 +218,7 @@ export default function Header({
                 </AnimatePresence>
               </div>
             ) : (
+              // 🔹 LOGIN / SIGNUP BUTTONS
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => onNavigate("login")}

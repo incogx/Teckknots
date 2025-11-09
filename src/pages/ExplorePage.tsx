@@ -4,6 +4,15 @@ import { ArrowLeft } from "lucide-react";
 import CategoryFilter from "../components/CategoryFilter";
 import LessonCard from "../components/LessonCard";
 
+// ✅ Import images correctly (Vite requires import statements)
+import reactImg from "@/attachments/react.jpeg";
+import nodeImg from "@/attachments/node.jpg";
+import aiPyImg from "@/attachments/aipy.jpg";
+import webDevImg from "@/attachments/webdev.avif";
+import mernImg from "@/attachments/mern.avif";
+import dsImg from "@/attachments/ds.jpg";
+import devopsImg from "@/attachments/devops.jpg";
+
 interface ExplorePageProps {
   onNavigate: (page: string) => void;
   onSelectCourse: (course: any) => void;
@@ -17,7 +26,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Learn the fundamentals of React and build dynamic UIs.",
       category: "Web Development",
       difficulty: "beginner",
-      image: "attachments/react.jpeg",
+      image: reactImg,
     },
     {
       id: 2,
@@ -25,7 +34,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Backend mastery with Node.js, Express, and APIs.",
       category: "Backend",
       difficulty: "intermediate",
-      image: "attachments/node.jpg",
+      image: nodeImg,
     },
     {
       id: 3,
@@ -33,7 +42,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Build intelligent systems with Python and machine learning.",
       category: "AI / ML",
       difficulty: "advanced",
-      image: "attachments/aipy.jpg",
+      image: aiPyImg,
     },
     {
       id: 4,
@@ -41,7 +50,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Learn HTML, CSS, and JavaScript from scratch.",
       category: "Frontend",
       difficulty: "beginner",
-      image: "attachments/webdev.avif",
+      image: webDevImg,
     },
     {
       id: 5,
@@ -49,7 +58,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Master React hooks, context, and state management.",
       category: "Frontend",
       difficulty: "advanced",
-      image: "attachments/mern.avif",
+      image: mernImg,
     },
     {
       id: 6,
@@ -57,7 +66,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Explore data analysis and visualization with Python.",
       category: "Data Science",
       difficulty: "intermediate",
-      image: "attachments/ds.jpg",
+      image: dsImg,
     },
     {
       id: 7,
@@ -65,7 +74,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Build complete web applications using modern tech stacks.",
       category: "Full Stack",
       difficulty: "intermediate",
-      image: "attachments/mern.avif",
+      image: mernImg,
     },
     {
       id: 8,
@@ -73,7 +82,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
       description: "Deploy applications using AWS, Docker, and Kubernetes.",
       category: "DevOps",
       difficulty: "advanced",
-      image: "attachments/devops.jpg",
+      image: devopsImg,
     },
     {
       id: 9,
@@ -97,7 +106,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
   const filteredCourses = useMemo(() => {
     if (selectedCategory === "All") return courses;
     return courses.filter((c) => c.category === selectedCategory);
-  }, [selectedCategory]);
+  }, [selectedCategory, courses]);
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-gray-50 to-white py-16 px-6 transition-colors">
@@ -111,7 +120,7 @@ export default function ExplorePage({ onNavigate, onSelectCourse }: ExplorePageP
           Explore All Courses
         </motion.h1>
 
-        {/* 🟢 Back Button (below header) */}
+        {/* 🟢 Back Button */}
         <div className="flex justify-center mb-10">
           <motion.button
             onClick={() => onNavigate("home")}
